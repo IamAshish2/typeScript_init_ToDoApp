@@ -1,5 +1,6 @@
 import { log } from 'console'
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
+import { ToDoItemsContext } from '../store/todoItemsStore';
 
 interface Props {
     // todo: string,
@@ -7,13 +8,21 @@ interface Props {
     handleAdd: (value:string) =>  void;
 }
 
-const InputFeild = ({  handleAdd }: Props) => {
+const InputFeild = () => { // {  handleAdd }: Props
     const inputValue = useRef<HTMLInputElement>(null);
+    const context = useContext(ToDoItemsContext);
+    if (!context) {
+        throw new Error("ToDoList must be used within a ToDoItemsProvider");
+    }
+    
+    const { addNewItem } = context;
+      
 
     const add = (e:React.SyntheticEvent) => {
         e.preventDefault();
         if(inputValue.current){
-            handleAdd(inputValue.current.value);
+            // handleAdd(inputValue.current.value);
+            addNewItem(inputValue.current.value);
             inputValue.current.value = "";
         }
     }
